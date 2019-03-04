@@ -1,49 +1,58 @@
+# HOWTO INSTALL MAYA ON UBUNTU
+
 
 # installs maya 201x
 # makes ~/maya/201x configs
 # should make /usr/autodesk/maya201x (not maya/201x/)
 # runs /usr/autodesk/maya201x/bin/maya.bin
 
+#OVERVIEW
+# 1. Configure the setup here
+# 2. Automatic scripts
+# 3. Error messages and some solutions
 
-# error composite-2014
-#sudo apt-get install -f
-#sudo dpkg-reconfigure composite-2014
-#sudo apt-get --purge remove composite-2014
+# ACKS
+# Based on https://linuxhint.com/install_autodesk_maya_ubuntu_1804/
+# Based on https://gist.github.com/heiths/3250500
+# Based on https://drz-twickey.ethz.ch/Main/MayaOnUbuntu
 
 
-#Just "Fake" /usr/autodesk/Composite_2014/etc/configure.py
-# hack: composite-2014 fails
-#Setting up composite-2014 (2014.0-862716) ...
-#python: can't open file '/usr/autodesk/Composite_2014/etc/configure.py': [Errno 2] No such file or directory
-#dpkg: error processing package composite-2014 (--install):
-#Errors were encountered while processing:
-# composite-2014
 
-#sudo mkdir -p /usr/autodesk/Composite_2014/etc
-#echo " " >/usr/autodesk/Composite_2014/etc/configure.py
+###############################################################################
+# Configure the setup here
+###############################################################################
 
+# choose one of the versions
+# manually download the package (google links doesnt wget)
+# 
 
 export DIR_INSTALLER='maya2017Installer'
 export DIR_USR_BIN='/usr/autodesk/maya2017'
 export DIR_CONFIG='~/maya/2017'
+export URL='http://edutrial.autodesk.com/NET17SWDLD/2017/MAYA/ESD/Autodesk_Maya_2017_EN_JP_ZH_Linux_64bit.tgz'
+export PACKAGE='Autodesk_Maya_2017_EN_JP_ZH_Linux_64bit.tgz'
 
 
 export DIR_INSTALLER='maya2018Installer'
 export DIR_USR_BIN='/usr/autodesk/maya2018'
 export DIR_CONFIG='~/maya/2018'
 export DIR_CONFIG='/home/hayko/maya/2018'
-
+export PACKAGE='Autodesk_Maya_2018_EN_Linux_64bit.tgz'
+export URL='https://doc-04-b0-docs.googleusercontent.com/docs/securesc/0pvu6j6pp3g0njcqrnfa2skpd7qj1ued/p639br12ptdris9a7fv9mi3o8lgfrufp/1551686400000/05850646042357046283/10637644739295237966/0Byl-OOkamOEIUXRyQjctSmZPdk0?e=download&nonce=o74srm7sbrepa&user=10637644739295237966&hash=gif7vf4gnl5j76isnfa5lc0926fggvkh'
 
 echo $DIR_INSTALLER
 echo $DIR_USR_BIN
 echo $DIR_CONFIG
 
-# fix rpm
-# https://ubuntuforums.org/archive/index.php/t-2123884.html
-# sudo apt-get --reinstall --only-upgrade install ^{lib,}rpm
 
 
-# https://linuxhint.com/install_autodesk_maya_ubuntu_1804/
+###############################################################################
+# Automatic scripts
+###############################################################################
+
+echo "starting the script..."
+echo ""
+
 
 #In this article I will show you how to install Autodesk Maya 2017 on Ubuntu 18.04. Let’s get started.
 #Adding Additional Repositories
@@ -103,12 +112,20 @@ sudo dpkg -i libxp6_1.0.2-2_amd64.deb
 #Now download Maya installer with the following command:
 #wget http://edutrial.autodesk.com/NET17SWDLD/2017/MAYA/ESD/Autodesk_Maya_2017_EN_JP_ZH_Linux_64bit.tgz
 #wget https://doc-04-b0-docs.googleusercontent.com/docs/securesc/0pvu6j6pp3g0njcqrnfa2skpd7qj1ued/p639br12ptdris9a7fv9mi3o8lgfrufp/1551686400000/05850646042357046283/10637644739295237966/0Byl-OOkamOEIUXRyQjctSmZPdk0?e=download&nonce=o74srm7sbrepa&user=10637644739295237966&hash=gif7vf4gnl5j76isnfa5lc0926fggvkh
-#https://drive.google.com/file/d/0Byl-OOkamOEIUXRyQjctSmZPdk0/view
+#lynx https://drive.google.com/file/d/0Byl-OOkamOEIUXRyQjctSmZPdk0/view
+#wget $URL
 
-#Once the download is completed, you should see Autodesk_Maya_2017_EN_JP_ZH_Linux_64bit.tgz file in the ~/Downloads directory.
+echo "manually downloaded the URL?"
+read RUNNOW
+case "$RUNNOW" in
+	n*|N*)
+	echo "ugh. do it then..."
+	exit 0;
+esac
 
-#echo $PWD
-#cd /media/hayko/DATA/code/third/commercial/maya
+
+#Once the download is completed, you should see Autodesk_Maya_201*_Linux_64bit.tgz file in the ~/Downloads directory.
+
 
 #Now create a new directory $DIR_INSTALLER/ with the following command:
 mkdir -p $DIR_INSTALLER
@@ -116,9 +133,7 @@ mkdir -p $DIR_INSTALLER
 
 #Now run the following command to extract the Maya installer to the $DIR_INSTALLER/ directory:
 
-#tar xvzf Autodesk_Maya_2017_EN_JP_ZH_Linux_64bit.tgz -C $DIR_INSTALLER
-tar xvzf Autodesk_Maya_2018_EN_Linux_64bit.tgz -C $DIR_INSTALLER
-
+tar xvzf $PACKAGE -C $DIR_INSTALLER
 
 
 
@@ -129,10 +144,10 @@ cd $DIR_INSTALLER/
 
 #Now run the following commands to create an executable that always returns true:
 
+# update: not required for this version
 # hack: due to error chmod
 # use real rpm due to chmod -/-/
 # sudo apt-get --reinstall --only-upgrade install ^{lib,}rpm
-
 
 # hack: skip rpm issue watch for crash
 #sudo mv -v /usr/bin/rpm /usr/bin/rpm_backup
@@ -143,8 +158,9 @@ cd $DIR_INSTALLER/
 
 #The Maya installer packages are all rpm files. Run the following command to convert them to deb file:
 
-# FAILS HERE
 sudo alien -cv *.rpm 
+
+# alternative version 
 #for i in *.rpm; do sudo alien -cv $i; done
 
 #It should take a very long time to complete. So sit back and relax.
@@ -240,6 +256,18 @@ gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 #Running Maya
 #Now that everything is configured, you can run Maya 2017 with the following command:
 
+
+#Everything should work now... 
+echo "installation complete."
+echo ""
+echo "start maya now?"
+read RUNNOW
+case "$RUNNOW" in
+	n*|N*)
+	echo "You can run maya any time by typing $DIR_USR_BIN/bin/maya.bin into the terminal"
+	exit 0;
+esac
+
 $DIR_USR_BIN/bin/maya.bin
 
 
@@ -249,12 +277,18 @@ $DIR_USR_BIN/bin/maya.bin
 #This is the Maya 2017 main window.
 #That’s how you install Maya 2017 on Ubuntu 18.04. Thanks for reading this article.
 
-# ERRORS
+
+
+
+###############################################################################
+# 3. Error messages and some solutions
+###############################################################################
 
 # error License server fails to install
 # make sure to edit these files accorindg to the drz wiki
 # sudo joe /var/flexlm/maya.lic
-# sudo joe /var/flexlm/maya.lic
+# sudo joe /usr/autodesk/maya2018/bin/License.env
+
 
 #./maya.bin
 #maya: Autodesk Maya 2017Licensing ErrorA licensing error occurred that Autodesk systems were not able to handle for you. Please contact Autodesk Customer Support for help in resolving this error.GetFeatureAuthorizationStatus 1 (Failure)
@@ -266,4 +300,30 @@ $DIR_USR_BIN/bin/maya.bin
 #ImportError: /usr/autodesk/maya2017/bin/../lib/libOGSGraphics-16.so: undefined symbol: EVP_CIPHER_CTX_cleanup
 
 
+
+# this should only occur when mixing the setup with maya2014
+# error composite-2014
+#sudo apt-get install -f
+#sudo dpkg-reconfigure composite-2014
+#sudo apt-get --purge remove composite-2014
+
+
+
+#Just "Fake" /usr/autodesk/Composite_2014/etc/configure.py
+# hack: composite-2014 fails
+#Setting up composite-2014 (2014.0-862716) ...
+#python: can't open file '/usr/autodesk/Composite_2014/etc/configure.py': [Errno 2] No such file or directory
+#dpkg: error processing package composite-2014 (--install):
+#Errors were encountered while processing:
+# composite-2014
+
+#sudo mkdir -p /usr/autodesk/Composite_2014/etc
+#echo " " >/usr/autodesk/Composite_2014/etc/configure.py
+
+
+
+
+# screwed up rpm because of the empty c code?# fix rpm
+# https://ubuntuforums.org/archive/index.php/t-2123884.html
+# sudo apt-get --reinstall --only-upgrade install ^{lib,}rpm
 
