@@ -15,8 +15,8 @@ OVERVIEW
 3. Error messages and some solutions
 
 ACKS
-Based on https://linuxhint.com/install_autodesk_maya_ubuntu_1804/
-Based on https://gist.github.com/heiths/3250500
-Based on https://drz-twickey.ethz.ch/Main/MayaOnUbuntu
+* Based on https://linuxhint.com/install_autodesk_maya_ubuntu_1804/
+* Based on https://gist.github.com/heiths/3250500
+* Based on https://drz-twickey.ethz.ch/Main/MayaOnUbuntu
 
 
