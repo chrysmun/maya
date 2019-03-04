@@ -1,9 +1,13 @@
 how to install maya 2018 on ubuntu 18.xx
 
 installs maya 201x
+
 makes ~/maya/201x configs
+
 should make /usr/autodesk/maya201x (not maya/201x/)
+
 runs /usr/autodesk/maya201x/bin/maya.bin
+
 
 OVERVIEW
 1. Configure the setup here
